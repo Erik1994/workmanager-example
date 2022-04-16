@@ -24,10 +24,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.work.*
 import com.friendschat.workmanagerexmaple.R
-import com.friendschat.workmanagerexmaple.contant.IMAGE_MANIPULATION_WORK_NAME
-import com.friendschat.workmanagerexmaple.contant.KEY_BLURE_LEVEL
-import com.friendschat.workmanagerexmaple.contant.KEY_IMAGE_URI
-import com.friendschat.workmanagerexmaple.contant.TAG_OUTPUT
+import com.friendschat.workmanagerexmaple.contant.*
 import com.friendschat.workmanagerexmaple.workers.BlurWorker
 import com.friendschat.workmanagerexmaple.workers.CleanupWorker
 import com.friendschat.workmanagerexmaple.workers.SaveImageToFileWorker
@@ -37,6 +34,7 @@ class BlurViewModel(application: Application) : ViewModel() {
 
     private val workMnager = WorkManager.getInstance(application)
     val outputWorkInfos: LiveData<List<WorkInfo>>
+    val progressWorkInos: LiveData<List<WorkInfo>>
 
     private var imageUri: Uri? = null
     var outputUri: Uri? = null
@@ -44,6 +42,7 @@ class BlurViewModel(application: Application) : ViewModel() {
     init {
         imageUri = getImageUri(application.applicationContext)
         outputWorkInfos = workMnager.getWorkInfosByTagLiveData(TAG_OUTPUT)
+        progressWorkInos = workMnager.getWorkInfosByTagLiveData(TAG_PROGRESS)
     }
     /**
      * Create the WorkRequest to apply the blur and save the resulting image
@@ -70,6 +69,7 @@ class BlurViewModel(application: Application) : ViewModel() {
 
         //Add WorkRequest to blur the image
         val blurRequest = OneTimeWorkRequestBuilder<BlurWorker>()
+            .addTag(TAG_PROGRESS)
             .setInputData(createInputData(blurLevel))
             .build()
 

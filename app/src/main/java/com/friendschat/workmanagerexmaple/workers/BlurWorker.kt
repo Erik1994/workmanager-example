@@ -10,6 +10,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.friendschat.workmanagerexmaple.contant.KEY_BLURE_LEVEL
 import com.friendschat.workmanagerexmaple.contant.KEY_IMAGE_URI
+import com.friendschat.workmanagerexmaple.contant.PROGRESS
 import com.friendschat.workmanagerexmaple.util.blurBitmap
 import com.friendschat.workmanagerexmaple.util.makeStatusNotification
 import com.friendschat.workmanagerexmaple.util.sleep
@@ -24,7 +25,13 @@ class BlurWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
         val blureLevel = inputData.getInt(KEY_BLURE_LEVEL, 1)
         makeStatusNotification("Bluring iamge", appContext)
 
-        sleep()
+       // sleep()
+
+        (0..100 step 10).forEach {
+            setProgressAsync(workDataOf(PROGRESS to it))
+            sleep()
+        }
+
 
         return try {
 //            val picture = BitmapFactory.decodeResource(
