@@ -40,6 +40,8 @@ class BlurViewModel(application: Application) : ViewModel() {
     var outputUri: Uri? = null
 
     init {
+        //clear workmanager db cache
+        workMnager.pruneWork()
         imageUri = getImageUri(application.applicationContext)
         outputWorkInfos = workMnager.getWorkInfosByTagLiveData(TAG_OUTPUT)
         progressWorkInos = workMnager.getWorkInfosByTagLiveData(TAG_PROGRESS)
