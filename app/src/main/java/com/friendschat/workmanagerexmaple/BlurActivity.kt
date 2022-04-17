@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.WorkInfo
 import com.friendschat.workmanagerexmaple.contant.KEY_IMAGE_URI
+import com.friendschat.workmanagerexmaple.contant.PROGRESS
 import com.friendschat.workmanagerexmaple.databinding.ActivityBlurBinding
 import com.friendschat.workmanagerexmaple.viewmodel.BlurViewModel
 import com.friendschat.workmanagerexmaple.viewmodel.BlurViewModelFactory
@@ -44,6 +46,16 @@ class BlurActivity : AppCompatActivity() {
                 }
             } else {
                 showWorkInProgress()
+            }
+        }
+
+        viewModel.progressWorkInos.observe(this){ workInfoList ->
+            if(workInfoList.isNullOrEmpty()) return@observe
+            workInfoList.forEach { workInfo ->
+                if (WorkInfo.State.RUNNING == workInfo.state) {
+                    val progress = workInfo.progress.getInt(PROGRESS, 0)
+                    binding.progressBar.progress = progress
+                }
             }
         }
     }
@@ -84,6 +96,7 @@ class BlurActivity : AppCompatActivity() {
             progressBar.visibility = View.GONE
             cancelButton.visibility = View.GONE
             goButton.visibility = View.VISIBLE
+            progressBar.progress = 0
         }
     }
 
